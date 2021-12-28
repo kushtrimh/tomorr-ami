@@ -8,7 +8,6 @@ then
 fi
 
 yum update -y
-yum install -y shadow-utils tar gzip wget initscripts
 
 # Install Java 17
 mkdir /usr/java
@@ -16,10 +15,19 @@ wget https://download.java.net/java/GA/jdk17.0.1/2a2082e5a09d4267845be086888add4
 tar -xf openjdk-17.0.1_linux-x64_bin.tar.gz -C /usr/java
 rm openjdk-17.0.1_linux-x64_bin.tar.gz
 
+# Install nginx
+cp nginx.repo /etc/yum.repos.d/nginx.repo
+yum update -y
+
+# Install and start nginx nginx
+yum install -y nginx
+systemctl enable nginx
+systemctl start nginx
+
 # Add user to handle code deployment
 useradd codedeployer
 
-cp profile.sh /etc/profile.d/tomorr.sh
+cp tomorr-profile.sh /etc/profile.d/tomorr.sh
 echo "" >> /etc/profile.d/tomorr.sh
 echo "export TOMORR_S3_EXTERNAL_PROPS=$1" >> /etc/profile.d/tomorr.sh
 
